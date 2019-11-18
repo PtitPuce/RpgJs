@@ -9,9 +9,28 @@
 <body>
     
     <div id="rpgContainer">
-        <div id="init"></div>
-        <div id="game"></div>
-        <div id="gameover"></div>
+        <div id="init" style="border:1px solid black;">
+            <table>
+                <thead>
+                <tr>
+                    <td>Personnage</td>
+                    <td>Arme choisie</td>
+                    <td>Armure sélectionnée</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="persoChoisi"></tr>
+                <tr id="armeChoisi"></tr>
+                <tr id="armureChoisi"></tr>
+            </tbody>
+            </table>
+        </div>
+        <div id="game" style="border:1px solid black;">
+
+        </div>
+        <div id="gameover" style="border:1px solid black;">
+
+        </div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> 
@@ -58,14 +77,59 @@
         });
 
         
-
+       
         var select_container = $("#init");
         createSelectFromArray("Archetypes", list_archetypes, $(select_container) );
         createSelectFromArray("Armes", list_armes, $(select_container) );
         createSelectFromArray("Armures", list_armures, $(select_container) );
-        
 
 
+        var archetype = $("#Archetypes");
+        var armure = $("#Armures");
+        var arme = $("#Armes");
+        var selected_Archetype = "";
+        var selected_Arme ="";
+        var selected_Armure ="";
+        var init = $('#init');
+
+        archetype.on('change',function(){
+            //On récupère l'ID de l'élément sélectionné
+            var selectedPerso = document.getElementsByName('persoChoisi').empty();
+            selectedPerso.empty();
+            selected_Archetype = archetype.children("option:selected").val();
+            console.log(selected_Archetype);
+            console.log(list_archetypes[selected_Archetype]);
+            var arche = document.createElement("p");
+            arche.setAttribute("name","persoChoisi");
+            arche.innerText =list_archetypes[selected_Archetype];
+            document.getElementsByName('persoChoisi').append(arche);
+        });
+
+        arme.on('change',function(){
+            //On récupère l'ID de l'élément sélectionné
+            $('#armeChoisi').empty();
+            selected_Arme = arme.children("option:selected").val();
+            console.log(selected_Arme);
+            console.log(list_armes[selected_Arme]);
+            var armes = document.createElement("p");
+            armes.setAttribute("name","armeChoisi");
+            armes.innerText =list_armes[selected_Arme];
+            $('#armeChoisi').append(armes);
+        });
+
+        armure.on('change',function(){
+            //On récupère l'ID de l'élément sélectionné
+            var selectedArmure = document.getElementsByName('persoChoisi');
+            selectedArmure.empty();
+            selected_Armure = armure.children("option:selected").val();
+            console.log(selected_Armure);
+            console.log(list_armures[selected_Armure]);
+            var armures = document.createElement("p");
+            armures.setAttribute("name","armureChoisi");
+            armures.innerText = list_armures[selected_Armure];
+            $('#armureChoisi').append(armures);
+            
+        });
     });
     </script>
 </body>
