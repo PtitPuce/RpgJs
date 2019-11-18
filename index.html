@@ -33,7 +33,7 @@
             data.forEach(function(item, key){
                 let option = document.createElement("option");
                 option.setAttribute("value", key);
-                option.innerText = item.nom;
+                option.innerText = item.toString();
                 select.append(option);
             });
                 
@@ -41,10 +41,28 @@
             container.append(select);
         };
 
+
+        // initialisation des collections d'objets [Archetypes, Armes, Armures]
+        var list_archetypes = [];
+        var list_armes = [];
+        var list_armures = [];
+
+        array_archetypes.forEach(function(item, key){
+            list_archetypes.push( new Archetype(item) );
+        });
+        array_armes.forEach(function(item, key){
+            list_armes.push( new Arme(item) );
+        });
+        array_armures.forEach(function(item, key){
+            list_armures.push( new Armure(item) );
+        });
+
+        
+
         var select_container = $("#init");
-        createSelectFromArray("Archetypes", array_archetypes, $(select_container) );
-        createSelectFromArray("Armes", array_armes, $(select_container) );
-        createSelectFromArray("Armures", array_armures, $(select_container) );
+        createSelectFromArray("Archetypes", list_archetypes, $(select_container) );
+        createSelectFromArray("Armes", list_armes, $(select_container) );
+        createSelectFromArray("Armures", list_armures, $(select_container) );
         
 
 
