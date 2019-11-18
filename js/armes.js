@@ -58,7 +58,7 @@ let Arme = class{
                 val_degats += Math.ceil(Math.random()*6);
             }
         }
-        return val_degats < 0 ? 0 : val_degats;
+        return parseInt(val_degats < 0 ? 0 : val_degats);
     }
 
     toString(){

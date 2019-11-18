@@ -1,9 +1,11 @@
-
 let Personnage = class{
     ARCHETYPE;
     HP;
     FORCE;
     AGILITE;
+    ARME;
+    ARMURE;
+    isDead;
     
     constructor(){
         this.HP = 0;
@@ -13,29 +15,35 @@ let Personnage = class{
         this.ARCHETYPE = null;
         this.ARMURE = null;
         this.ARME = null;
+
+        this.isDead = false;
     }
 
     setArchetype(_archetype){
         this.ARCHETYPE = _archetype;
 
-        this.HP = this.ARCHETYPE.HP;
-        this.FORCE = this.ARCHETYPE.FORCE;
-        this.AGILITE = this.ARCHETYPE.AGILITE;
+        this.HP = parseInt(this.ARCHETYPE.HP);
+        this.FORCE = parseInt(this.ARCHETYPE.FORCE);
+        this.AGILITE = parseInt(this.ARCHETYPE.AGILITE);
 
     }
     setArmure(_armure){ this.ARMURE = _armure; }
     setArme(_arme){ this.ARME = _arme; }
 
     getPointArmure(){
-        return  this.ARMURE.defense;
+        return  parseInt(this.ARMURE.defense);
     }
-    getEsquive(){
-        return this.AGILITE + this.ARME.agilite + this.ARMURE.agilite;
+    getAgiliteTotal(){
+        return parseInt(this.AGILITE) + parseInt(this.ARME.agilite) + parseInt(this.ARMURE.agilite);
     }
+    
     checkHit(_enemy){
-        let chance = Math.random()*6 + Math.random()*6;  // (2D6 + this.ARME.agilite) > (enemy.AGILITE + enemy.getEsquive())
-        let bonusThis = chance + this.ARME.agilite + this.AGILITE;
-        let bonusEnemy = _enemy.AGILITE + _enemy.getEsquive();
+        let chance = Math.ceil(Math.random()*6) + Math.ceil(Math.random()*6);  // (2D6 + this.ARME.agilite) > (enemy.AGILITE + enemy.getAgiliteTotal())
+        let bonusThis = chance + this.getAgiliteTotal();
+        let bonusEnemy = _enemy.getAgiliteTotal();
+        
+        console.log("chance: "+chance+" / bonusThis: "+bonusThis+" / esquiveEnemi: "+bonusEnemy);
+        console.log("hit ?"+ (bonusThis > bonusEnemy));
 
         if(bonusThis > bonusEnemy){
             return true;
@@ -43,14 +51,29 @@ let Personnage = class{
         return false;
     }
     getDegats(_enemy){
-        this.ARME.getDegats() + this.FORCE - _enemy.getPointArmure() + this.ARME.penetration;
+        var _degats = this.ARME.getDegats() + this.FORCE - _enemy.getPointArmure() + this.ARME.penetrationArmure;
+
+        return _degats < 0 ? 0 : _degats;
     }
     takeDegats(_degats){
-        this.HP -= _degats;
-        if(this.HP < 0){
+        this.HP = parseInt(this.HP) - parseInt(_degats);
+        if(this.HP <= 0){
             this.die();
         }
     }
     die(){
+        this.isDead = true;
+    }
+
+    // toStrings
+    getDegatsToString(){
+        return this.ARME.nbDes + "D6 +"+ this.ARME.bonusDegat + " +(F="+this.FORCE+") (PA="+this.ARME.penetrationArmure+")";
+    }
+    getDegatsMinToString(){
+        return ((this.ARME.nbDes) + this.ARME.bonusDegat + this.FORCE) + "(PA="+this.ARME.penetrationArmure+")";
+
+    }
+    getDegatsMaxToString(){
+        return ((this.ARME.nbDes*6) + this.ARME.bonusDegat + this.FORCE) + "(PA="+this.ARME.penetrationArmure+")";
     }
 }

@@ -19,3 +19,20 @@ td{
 td:nth-child(even){
     background-color: lightgrey;
 }
+
+
+#fiche_joueur{
+    display: inline-block;
+}
+#fiche_enemy{
+    float:right;
+}
+
+#game{
+    text-align: center;
+}
+
+.red{
+    color: red !important;
+    font-weight: bold;
+}

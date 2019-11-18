@@ -14,6 +14,9 @@
         <div id="init"></div>
         <!-- Cadre FICHE personnage JOUEUR -->
         <div id="template_fiche_perso" style="display:none;">
+            <div name="general">
+                <p name="title"></p>
+            </div>
             <div name="stats">
                 <table>
                     <thead>
@@ -39,18 +42,18 @@
                     <thead>
                         <tr>
                             <th>Arme</th>
-                            <th>AGI</th>
                             <th>D6</th>
                             <th>DEG</th>
+                            <th>AGI</th>
                             <th>PA</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td name="nom"></td>
-                            <td name="AGI"></td>
                             <td name="D6"></td>
                             <td name="DEG"></td>
+                            <td name="AGI"></td>
                             <td name="PA"></td>    
                         </tr>
                     </tbody>
@@ -61,20 +64,48 @@
                     <thead>
                         <tr>
                             <th>Armure</th>
-                            <th>DEF</th>
+                            <th>--</th>
+                            <th>--</th>
                             <th>AGI</th>
+                            <th>DEF</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td name="nom"></td>
-                            <td name="DEF"></td>
+                            <td name="--">--</td>
+                            <td name="--">--</td>
                             <td name="AGI"></td>
+                            <td name="DEF"></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+            <div name="extras">
+                <table>
+                    <thead>
+                        <tr>
+                            <th name="esquive-stat"></th>
+                            <td name="esquive-score"></td>
+                        </tr>
+                        <tr>
+                            <th name="degats-stat"></th>
+                            <td name="degats-score"></td>
+                        </tr>
+                        
+                        <tr>
+                            <th>Dégâts MIN</th>
+                            <td name="degats-min"></td>
+                        </tr>
+                        <tr>
+                            <th>Dégâts MAX</th>
+                            <td name="degats-max"></td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
+        <div id="fiches"></div>
         <div id="game"></div>
         <div id="gameover"></div>
     </div>
@@ -84,6 +115,7 @@
     <script src="./js/armes.js"></script>
     <script src="./js/armures.js"></script>
     <script src="./js/archetypes.js"></script>
+    <script src="./js/game.js"></script>
     <script>
     $(function(){
         /* variables globales */
@@ -104,6 +136,13 @@
             container.append(select);
         };
 
+        //Creer le bouton de validation du personnage joueur
+        var createButtonValidate = function(container){
+            var btn = document.createElement("button");
+            btn.setAttribute("id", "btn_validate");
+            btn.innerText = "Fight !!!";
+            container.append(btn);
+        }
         // Fonction d'update de la fiche de personnage
         // Params : la fiche HTML , l'Objet de Personnage
         var updateFichePerso = function(_fiche, _perso){
@@ -124,10 +163,39 @@
             $(armure).find("[name=nom]").text(_perso.ARMURE.nom); 
             $(armure).find("[name=DEF]").text(_perso.ARMURE.defense); 
             $(armure).find("[name=AGI]").text(_perso.ARMURE.agilite);
+
+            let extras = $(_fiche).find("[name=extras]");
+            $(extras).find("[name=esquive-stat]").text("Esquive/Chc. de toucher"); 
+            $(extras).find("[name=esquive-score]").text(_perso.getAgiliteTotal());
+            $(extras).find("[name=degats-stat]").text("Dégâts (équation)"); 
+            $(extras).find("[name=degats-score]").text(_perso.getDegatsToString());
+             
+            $(extras).find("[name=degats-min]").text(_perso.getDegatsMinToString());
+            $(extras).find("[name=degats-max]").text(_perso.getDegatsMaxToString());
         }
+        
+        // display btn for fight
+        var UIForFight = function(container){
+            var btnNextHit = document.createElement("button");
+            btnNextHit.setAttribute("id", "btn_next_hit");
+            btnNextHit.innerText = "!! HIT !!";
+            container.append(btnNextHit);
+        }
+
+        // UI for next enemy
+        var UIForNextEnemy = function(container){
+            var btnNextEnemy = document.createElement("button");
+            btnNextEnemy.setAttribute("id", "btn_next_enemy");
+            btnNextEnemy.innerText = "What do we say to Death ? ... Not today... BRING IT ON !!!";
+            container.append(btnNextEnemy);
+        }
+        
+
 
         // references aux differents containers/templates
         var container_selects = $("#init");
+        var container_fiches = $("#fiches");
+        var container_game = $("#game");
         var template_fiche_perso = $("#template_fiche_perso");
         
 
@@ -149,6 +217,7 @@
         createSelectFromList("Archetypes", list_archetypes, $(container_selects) );
         createSelectFromList("Armes", list_armes, $(container_selects) );
         createSelectFromList("Armures", list_armures, $(container_selects) );
+        createButtonValidate($(container_selects));
         
         // references selectList
         var select_archetypes = $("#Archetypes");
@@ -156,8 +225,9 @@
         var select_armures = $("#Armures");
 
         //init personnages
-        var perso_joueur = new Personnage();
-        var perso_enemie = new Personnage();
+        var game = new Game(list_archetypes, list_armes, list_armures).init();
+        var perso_joueur = game.perso_joueur;
+        var perso_enemy = game.perso_enemy;
 
         perso_joueur.setArchetype( list_archetypes[ $(select_archetypes).val() ] );
         perso_joueur.setArme( list_armes[ $(select_armes).val() ] );
@@ -166,8 +236,16 @@
         var fiche_joueur = document.createElement("div");
         fiche_joueur.setAttribute("id", "fiche_joueur");
         fiche_joueur.innerHTML = $(template_fiche_perso).html();
-        container_selects.append( fiche_joueur );
+        $(fiche_joueur).find("[name=title]").text("JOUEUR");
+        container_fiches.append( fiche_joueur );
         updateFichePerso(fiche_joueur, perso_joueur);
+
+        var fiche_enemy = document.createElement("div");
+        fiche_enemy.setAttribute("id", "fiche_enemy");
+        fiche_enemy.innerHTML = $(template_fiche_perso).html();
+        $(fiche_enemy).find("[name=title]").text("ENEMI");
+        container_fiches.append( fiche_enemy );
+        updateFichePerso(fiche_enemy, perso_enemy);
 
         // Listeners creation Perso Joueur
         $(select_archetypes).on("change", function(){
@@ -182,6 +260,27 @@
             perso_joueur.setArmure( list_armures[ $(this).val() ] ); 
             updateFichePerso(fiche_joueur, perso_joueur);
         });
+
+        // validation du personnage
+        $("#btn_validate").on("click", function(){
+            container_selects.empty();
+            UIForFight(container_game);
+            game.startFight();
+        });
+
+        // next hit
+        $("body").on("click", "#btn_next_hit", function(){
+            console.clear();
+            console.log("next hit");
+            game.nextHit();
+            updateFichePerso(fiche_joueur, game.perso_joueur);
+            updateFichePerso(fiche_enemy, game.perso_enemy);
+        })
+        
+        // next enemy
+        $("body").on("click", "#btn_next_enemy", function(){
+            game.nextEnemy();
+        })
 
     });
     </script>
