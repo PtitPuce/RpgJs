@@ -11,7 +11,6 @@ let array_archetypes = [
     {
         nom: "Barbare", HP: 32, FORCE : 4, AGILITE: 1
     },
-    
 ];
 
 
@@ -33,11 +32,11 @@ let Archetype = class{
         return  this.ARMURE.defense;
     }
     getEsquive(){
-        return this.AGILITE + this.ARME.agilite;
+        return this.AGILITE + this.ARME.agilite + this.ARMURE.agilite;
     }
     checkHit(_enemy){
         let chance = Math.random()*6 + Math.random()*6;  // (2D6 + this.ARME.agilite) > (enemy.AGILITE + enemy.getEsquive())
-        let bonusThis = chance + this.ARME.agilite;
+        let bonusThis = chance + this.ARME.agilite + this.AGILITE;
         let bonusEnemy = _enemy.AGILITE + _enemy.getEsquive();
 
         if(bonusThis > bonusEnemy){
