@@ -12,17 +12,19 @@
         <div id="init" style="border:1px solid black;">
             <table>
                 <thead>
-                <tr>
-                    <td>Personnage</td>
-                    <td>Arme choisie</td>
-                    <td>Armure sélectionnée</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr id="persoChoisi"></tr>
-                <tr id="armeChoisi"></tr>
-                <tr id="armureChoisi"></tr>
-            </tbody>
+                    <tr>
+                        <td>Personnage</td>
+                        <td>Arme choisie</td>
+                        <td>Armure sélectionnée</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td name="persoChoisi"></td>
+                        <td name="armeChoisi"></td>
+                        <td name="armureChoisi"></td>
+                    </tr>
+                </tbody>
             </table>
         </div>
         <div id="game" style="border:1px solid black;">
@@ -55,12 +57,9 @@
                 option.innerText = item.toString();
                 select.append(option);
             });
-                
             // 3. ajouter l'element a un conteneur specifique
             container.append(select);
         };
-
-
         // initialisation des collections d'objets [Archetypes, Armes, Armures]
         var list_archetypes = [];
         var list_armes = [];
@@ -76,60 +75,71 @@
             list_armures.push( new Armure(item) );
         });
 
-        
-       
         var select_container = $("#init");
         createSelectFromArray("Archetypes", list_archetypes, $(select_container) );
         createSelectFromArray("Armes", list_armes, $(select_container) );
         createSelectFromArray("Armures", list_armures, $(select_container) );
 
-
         var archetype = $("#Archetypes");
         var armure = $("#Armures");
         var arme = $("#Armes");
-        var selected_Archetype = "";
+        var selected_Archetype="";
         var selected_Arme ="";
         var selected_Armure ="";
         var init = $('#init');
+        var selectedPerso = $('[name="persoChoisi"]');
+        var selectedArme = $('[name="armeChoisi"');
+        var selectedArmure = $('[name="armureChoisi"');
 
-        archetype.on('change',function(){
+        archetype.on('change',displayValues(archetype,list_archetypes,selectedPerso));
             //On récupère l'ID de l'élément sélectionné
-            var selectedPerso = document.getElementsByName('persoChoisi').empty();
-            selectedPerso.empty();
+            /*selectedPerso.empty();
             selected_Archetype = archetype.children("option:selected").val();
             console.log(selected_Archetype);
             console.log(list_archetypes[selected_Archetype]);
             var arche = document.createElement("p");
-            arche.setAttribute("name","persoChoisi");
+            arche.setAttribute("name",selected_Archetype);
             arche.innerText =list_archetypes[selected_Archetype];
-            document.getElementsByName('persoChoisi').append(arche);
-        });
+            selectedPerso.append(arche);*/
+        //});
 
-        arme.on('change',function(){
+        arme.on('change',displayValues(arme,list_armes,selectedArme));
             //On récupère l'ID de l'élément sélectionné
-            $('#armeChoisi').empty();
+            /*selectedArme.empty();
             selected_Arme = arme.children("option:selected").val();
             console.log(selected_Arme);
             console.log(list_armes[selected_Arme]);
             var armes = document.createElement("p");
-            armes.setAttribute("name","armeChoisi");
+            armes.setAttribute("name",selected_Arme);
             armes.innerText =list_armes[selected_Arme];
-            $('#armeChoisi').append(armes);
-        });
-
-        armure.on('change',function(){
+            selectedArme.append(armes);*/
+        //});
+        armure.on('change',displayValues(armure,list_armures,selectedArmure));
+        //armure.on('change',function(){
             //On récupère l'ID de l'élément sélectionné
-            var selectedArmure = document.getElementsByName('persoChoisi');
-            selectedArmure.empty();
-            selected_Armure = armure.children("option:selected").val();
-            console.log(selected_Armure);
-            console.log(list_armures[selected_Armure]);
-            var armures = document.createElement("p");
-            armures.setAttribute("name","armureChoisi");
-            armures.innerText = list_armures[selected_Armure];
-            $('#armureChoisi').append(armures);
+            //selectedArmure.empty();
+            //selected_Armure = armure.children("option:selected").val();
+            //console.log(selected_Armure);
+            //console.log(list_armures[selected_Armure]);
+            //var armures = document.createElement("p");
+            //armures.setAttribute("name",selected_Armure);
+            //armures.innerText = list_armures[selected_Armure];
+            //selectedArmure.append(armures);
+        //});
+
+        function displayValues(this,itemList,tdName){
+            //On récupère l'ID de l'élément sélectionné
+            console.log("j'entre dans la fonction");
+            tdName.empty();
+            selected_item = this.children("option:selected").val();
+            console.log(selected_item);
+            console.log(itemList[selected_item]);
+            let elem = document.createElement("p");
+            elem.setAttribute("name",selected_item);
+            elem.innerText =itemList[selected_item];
+            return tdName.append(elem);
             
-        });
+        };
     });
     </script>
 </body>
