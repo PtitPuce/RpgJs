@@ -1,4 +1,4 @@
-let arrayArmures = [
+let array_armures = [
     {
         nom: "Tissu",
         defense: 0,
@@ -20,3 +20,19 @@ let arrayArmures = [
         agilite: -2,
     }
 ];
+
+let Armure = class{
+    nom;
+    defense;
+    agilite;
+
+    constructor(_armure){
+        this.nom = _armure.nom;
+        this.defense = _armure.defense;
+        this.agilite = _armure.agilite;
+    }
+
+    toString(){
+        return this.nom + "(DEF:"+this.defense+", AGI:"+this.agilite+")";
+    }
+}

@@ -8,9 +8,47 @@
 </head>
 <body>
     
-    <div id="rpgContainer"></div>
+    <div id="rpgContainer">
+        <div id="init"></div>
+        <div id="game"></div>
+        <div id="gameover"></div>
+    </div>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> 
+    <script src="personnage.js"></script>
+    <script src="armes.js"></script>
+    <script src="armures.js"></script>
     <script src="archetypes.js"></script>
-    <script></script>
+    <script>
+    $(function(){
+
+        /* variables globales */
+
+        var createSelectFromArray = function(str_id, data, container){
+            // 1. creer l'element <select>
+            let select = document.createElement("select");
+            select.setAttribute("id", str_id);
+
+            // 2. LOOP sur data creer les elements <option>
+            data.forEach(function(item, key){
+                let option = document.createElement("option");
+                option.setAttribute("value", key);
+                option.innerText = item.nom;
+                select.append(option);
+            });
+                
+            // 3. ajouter l'element a un conteneur specifique
+            container.append(select);
+        };
+
+        var select_container = $("#init");
+        createSelectFromArray("Archetypes", array_archetypes, $(select_container) );
+        createSelectFromArray("Armes", array_armes, $(select_container) );
+        createSelectFromArray("Armures", array_armures, $(select_container) );
+        
+
+
+    });
+    </script>
 </body>
 </html>
