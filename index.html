@@ -14,6 +14,11 @@
         <div id="gameover"></div>
     </div>
 
+    <h2> Fiche personnage </h2>
+    <div id="fichePerso">
+
+    </div>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> 
     <script src="personnage.js"></script>
     <script src="armes.js"></script>
@@ -55,14 +60,55 @@
         });
         array_armures.forEach(function(item, key){
             list_armures.push( new Armure(item) );
-        });
+        });        
 
-        
 
         var select_container = $("#init");
         createSelectFromArray("Archetypes", list_archetypes, $(select_container) );
         createSelectFromArray("Armes", list_armes, $(select_container) );
         createSelectFromArray("Armures", list_armures, $(select_container) );
+    
+        var refreshFichePerso = function(){
+            // Instanciation du personnage
+
+
+
+        };
+
+        //Actualisation de la fiche perso
+        $("#rpgContainer").bind("change", function(e){
+            $("#fichePerso").empty();
+
+            archetypePos = $("#Archetypes").val();
+            armePos = $("#Armes").val(); 
+            armurePos = $("#Armures").val();
+            
+            // Infos liées à l'archétype 
+            $( "#fichePerso" ).append("<div ='archetypePerso'")
+            $( "#fichePerso" ).append( "<h3>Archétype</h3>");
+            $( "#fichePerso" ).append( "<p>");
+            $( "#fichePerso" ).append( array_archetypes[archetypePos].nom+"</br>" );
+            $( "#fichePerso" ).append( "Points de vie : "+array_archetypes[archetypePos].HP+"</br>" );
+            $( "#fichePerso" ).append( "Force : "+array_archetypes[archetypePos].FORCE+"</br>" );
+            $( "#fichePerso" ).append( "Agilité "+array_archetypes[archetypePos].AGILITE+"</br>" );
+            $( "#fichePerso" ).append( "Points d'armure "+array_armures[armurePos].defense+"</p>" );
+            $( "#fichePerso" ).append("</div>");  
+
+            // Infos liées à l'arme
+            $( "#fichePerso" ).append("<div ='armePerso'")
+            $( "#fichePerso" ).append( "<h3>Arme</h3>");
+            $( "#fichePerso" ).append( "<p>");
+            $( "#fichePerso" ).append( array_armes[armePos].nom+"</br>" );
+            $( "#fichePerso" ).append( "Agilité : "+array_armes[armePos].agilite+"</br>" );
+            $( "#fichePerso" ).append( "Bonus dégât : "+array_armes[armePos].bonusDegat+"</br>" );
+            $( "#fichePerso" ).append( "Pénétration d'armure : "+array_armes[armePos].penetrationArmure+"</br>" );
+            $( "#fichePerso" ).append("</div>"); 
+            
+            // Infos liées à l'armure
+
+        });
+
+        
         
 
 
