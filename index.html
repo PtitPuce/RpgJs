@@ -14,11 +14,40 @@
         <div id="gameover"></div>
     </div>
 
-    <h2> Fiche personnage </h2>
     <div id="fichePerso">
-
+        <table>
+            <thead>
+                <tr>
+                    <th id="tabStatPerso" colspan="2">Statistiques du personnage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Force</td>
+                    <td id="statForce"></td>
+                </tr>
+                <tr>
+                    <td>HP</td>
+                    <td id="statHP"></td>
+                </tr>
+                <tr>
+                    <td>Point d'armure</td>
+                    <td id="statArmure"></td>
+                </tr>
+                <tr>
+                    <td>Esquive</td>
+                    <td id="statEsquive"></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
+    <button id="fightButton" class="favorite styled" type="button">FIGHT</button>
+
+    <div id="fightNow"></div>
+
+    <button id="frappeButton" style="display:none" class="favorite styled" type="button">DEFONCE LE</button>
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> 
     <script src="personnage.js"></script>
     <script src="armes.js"></script>
@@ -69,47 +98,85 @@
         createSelectFromArray("Armures", list_armures, $(select_container) );
     
         var refreshFichePerso = function(){
-            // Instanciation du personnage
-
-
-
-        };
-
-        //Actualisation de la fiche perso
-        $("#rpgContainer").bind("change", function(e){
-            $("#fichePerso").empty();
-
             archetypePos = $("#Archetypes").val();
             armePos = $("#Armes").val(); 
             armurePos = $("#Armures").val();
-            
-            // Infos liées à l'archétype 
-            $( "#fichePerso" ).append("<div ='archetypePerso'")
-            $( "#fichePerso" ).append( "<h3>Archétype</h3>");
-            $( "#fichePerso" ).append( "<p>");
-            $( "#fichePerso" ).append( array_archetypes[archetypePos].nom+"</br>" );
-            $( "#fichePerso" ).append( "Points de vie : "+array_archetypes[archetypePos].HP+"</br>" );
-            $( "#fichePerso" ).append( "Force : "+array_archetypes[archetypePos].FORCE+"</br>" );
-            $( "#fichePerso" ).append( "Agilité "+array_archetypes[archetypePos].AGILITE+"</br>" );
-            $( "#fichePerso" ).append( "Points d'armure "+array_armures[armurePos].defense+"</p>" );
-            $( "#fichePerso" ).append("</div>");  
 
-            // Infos liées à l'arme
-            $( "#fichePerso" ).append("<div ='armePerso'")
-            $( "#fichePerso" ).append( "<h3>Arme</h3>");
-            $( "#fichePerso" ).append( "<p>");
-            $( "#fichePerso" ).append( array_armes[armePos].nom+"</br>" );
-            $( "#fichePerso" ).append( "Agilité : "+array_armes[armePos].agilite+"</br>" );
-            $( "#fichePerso" ).append( "Bonus dégât : "+array_armes[armePos].bonusDegat+"</br>" );
-            $( "#fichePerso" ).append( "Pénétration d'armure : "+array_armes[armePos].penetrationArmure+"</br>" );
-            $( "#fichePerso" ).append("</div>"); 
-            
-            // Infos liées à l'armure
+            // Instanciation du personnage
+            var selectedPerso = new Personnage();
+            selectedPerso.setArme(list_armes[armePos]);
+            selectedPerso.setArmure(list_armures[armurePos]);
+            selectedPerso.setArchetype(list_archetypes[archetypePos]);
+            console.log(selectedPerso);
 
+            $("#statForce").text(selectedPerso.ARCHETYPE.FORCE);
+            $("#statHP").text(selectedPerso.ARCHETYPE.HP);
+            $("#statArmure").text(selectedPerso.getPointArmure());
+            $("#statEsquive").text(selectedPerso.getEsquive())
+        };
+
+        var generateRandomEnemy = function(){
+            mechantBonhomme = new Personnage();
+            // Selection d'un archétype aléatoire           
+            mechantBonhomme.setArme(list_armes[Math.floor(Math.random()*4)]);
+            
+            // Sélection d'une arme aléatoire
+            mechantBonhomme.setArmure(list_armures[Math.floor(Math.random()*4)]);
+            
+            // Sélection d'une armure aléatoire
+            mechantBonhomme.setArchetype(list_archetypes[Math.floor(Math.random()*4)]);
+
+            console.log(mechantBonhomme);
+
+            var archetypeMechant = mechantBonhomme.ARCHETYPE.nom;
+            //console.log(archetypeMechant);
+
+            if (archetypeMechant == "Hobbit") {
+                strFight = "un mignon petit hobbit"; 
+            } else if (archetypeMechant == "Voleur") {
+                strFight = "un voleur rusé";
+            } else if (archetypeMechant == "Guerrier") {
+                strFight = "un valeureux guerrier";
+            } else if (archetypeMechant == "Barbare") {
+                strFight = "un affreux barbare";
+            } 
+            
+            $("#fightNow").empty();
+            $("#fightNow").text("Vous allez affronter "+strFight);
+
+            $("#fightNom").append('<button id="frappeButton" class="favorite styled" type="button">DEFONCE LE</button>');
+
+            $("#frappeButton").attr("style", "");
+            // Initialisation des vies
+            //viePerso = 0;
+            //vieEnnemi = 0;
+
+        };
+        
+        //Actualisation de la fiche perso
+        $("#Archetypes").bind("change", function(e){
+            refreshFichePerso();
         });
 
-        
-        
+        $("#Armes").bind("change", function(e){
+            refreshFichePerso();
+        });
+
+        $("#Armures").bind("change", function(e){
+            refreshFichePerso();
+        });        
+
+        // Génération d'un ennemi aléatoire
+        $("#fightButton").bind("click", function(e){
+            generateRandomEnemy();
+        });
+
+        // Génération d'un ennemi aléatoire
+        $("#frappeButton").bind("click", function(e){
+            // Faire apparaitre deux champs avec les HP
+            viePerso = ParseInt(selectedPerso.HP);
+            vieEnnemi = ParseInt(archetypeMechant.HP);
+        });
 
 
     });

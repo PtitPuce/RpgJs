@@ -6,8 +6,8 @@ let Personnage = class{
     AGILITE;
     
     constructor(){
-        this.ARCHETYPE = 0;
-        
+        this.ARCHETYPE = null;
+
         this.HP = 0;
         this.FORCE = 0;
         this.AGILITE = 0;
@@ -18,7 +18,14 @@ let Personnage = class{
 
     setArmure(_armure){ this.ARMURE = _armure; }
     setArme(_arme){ this.ARME = _arme; }
+    setArchetype(_archetype){
+         this.ARCHETYPE = _archetype;
+         this.HP = _archetype.HP;
+         this.AGILITE = _archetype.AGILITE;
+         this.FORCE = _archetype.FORCE; 
+    }
 
+    
     getPointArmure(){
         return  this.ARMURE.defense;
     }
@@ -26,9 +33,9 @@ let Personnage = class{
         return this.AGILITE + this.ARME.agilite + this.ARMURE.agilite;
     }
     checkHit(_enemy){
-        let chance = Math.random()*6 + Math.random()*6;  // (2D6 + this.ARME.agilite) > (enemy.AGILITE + enemy.getEsquive())
+        let chance = Math.ceil(Math.random()*6) + Math.ceil(Math.random()*6);  // (2D6 + this.ARME.agilite) > (enemy.AGILITE + enemy.getEsquive())
         let bonusThis = chance + this.ARME.agilite + this.AGILITE;
-        let bonusEnemy = _enemy.AGILITE + _enemy.getEsquive();
+        let bonusEnemy = _enemy.getEsquive();
 
         if(bonusThis > bonusEnemy){
             return true;
