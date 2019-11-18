@@ -1,0 +1,21 @@
+th{
+    background-color: black;
+    color: white;
+    text-align: center;
+}
+th:first-child{
+    text-align: left;
+}
+
+td:first-child{
+    min-width: 100px;
+    text-align: left;
+}
+td{
+    min-width: 50px;
+    text-align: center;
+}
+
+td:nth-child(even){
+    background-color: lightgrey;
+}

@@ -62,6 +62,6 @@ let Arme = class{
     }
 
     toString(){
-        return this.nom + "(AGI:"+this.agilite+", Dés:"+this.nbDes+", DEG:"+this.bonusDegat+", PA:"+this.penetrationArmure+")";
+        return this.nom + "(AGI:"+this.agilite+", D6:"+this.nbDes+", DEG:"+this.bonusDegat+", PA:"+this.penetrationArmure+")";
     }
 }

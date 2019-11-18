@@ -5,17 +5,24 @@ let Personnage = class{
     FORCE;
     AGILITE;
     
-    constructor(_archetype){
+    constructor(){
+        this.HP = 0;
+        this.FORCE = 0;
+        this.AGILITE = 0;
+
+        this.ARCHETYPE = null;
+        this.ARMURE = null;
+        this.ARME = null;
+    }
+
+    setArchetype(_archetype){
         this.ARCHETYPE = _archetype;
 
         this.HP = this.ARCHETYPE.HP;
         this.FORCE = this.ARCHETYPE.FORCE;
         this.AGILITE = this.ARCHETYPE.AGILITE;
 
-        this.ARMURE = null;
-        this.ARME = null;
     }
-
     setArmure(_armure){ this.ARMURE = _armure; }
     setArme(_arme){ this.ARME = _arme; }
 
